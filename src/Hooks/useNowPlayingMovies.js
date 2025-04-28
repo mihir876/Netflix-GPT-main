@@ -1,24 +1,28 @@
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { addNowPlayingMovies } from "../Components/movieSlice"
-import { API_OPTIONS } from "../utils/constant"
-
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addNowPlayingMovies } from "../Components/movieSlice";
+import { API_OPTIONS } from "../utils/constant";
 
 const useNowPlayingMovies = () => {
-    const dispatch = useDispatch()
-
-    const nowPlayingMovies = useSelector(store => store.movies.nowPlayingMovies)
-
-    const getNowPlayingMovies = async () => {
-      const data = await fetch('https://api.themoviedb.org/3/movie/now_playing?page=1', API_OPTIONS)
-      const json = await data.json()
-      dispatch(addNowPlayingMovies(json.results))
-      // console.log(json.results)
-    }
+  const dispatch = useDispatch();
   
-    useEffect( () => {
-      !nowPlayingMovies && getNowPlayingMovies()
-    })
-}
+  const nowPlayingMovies = useSelector(store => store.movies.nowPlayingMovies);
 
-export default useNowPlayingMovies 
+  const getNowPlayingMovies = async () => {
+    // Using the environment variable for TMDB API Key
+    const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+
+    const data = await fetch(
+      `https://api.themoviedb.org/3/movie/now_playing?page=1&api_key=${TMDB_API_KEY}`, 
+      API_OPTIONS
+    );
+    const json = await data.json();
+    dispatch(addNowPlayingMovies(json.results));
+  };
+
+  useEffect(() => {
+    !nowPlayingMovies && getNowPlayingMovies();
+  });
+};
+
+export default useNowPlayingMovies;
