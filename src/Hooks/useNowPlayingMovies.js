@@ -10,7 +10,8 @@ const useNowPlayingMovies = () => {
 
   const getNowPlayingMovies = async () => {
     // Using the environment variable for TMDB API Key
-    const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+   const TMDB_API_KEY = process.env.REACT_APP_TMDB_API_KEY;
+
 
     const data = await fetch(
       `https://api.themoviedb.org/3/movie/now_playing?page=1&api_key=${TMDB_API_KEY}`, 
